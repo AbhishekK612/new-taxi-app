@@ -20,6 +20,12 @@
   </properties>
 
   <dependencies>
+  <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.10.2</version>
+    <scope>test</scope>
+</dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
@@ -80,10 +86,70 @@
           <version>3.1.2</version>
         </plugin>
         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.24.0</version>
+
+            <configuration>
+                <!-- Java version -->
+                <targetJdk>17</targetJdk>
+
+                <!-- Fail build if violations found -->
+                <failOnViolation>true</failOnViolation>
+
+                <!-- Print violations in console -->
+                <printFailingErrors>true</printFailingErrors>
+
+                <!-- Generate HTML report -->
+                <linkXRef>false</linkXRef>
+            </configuration>
+
+            <executions>
+                <execution>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
+        <plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.13</version>
+
+    <executions>
+
+        <execution>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+
+        <execution>
+            <id>report</id>
+            <phase>verify</phase>
+
+            <goals>
+                <goal>report</goal>
+            </goals>
+
+        </execution>
+
+    </executions>
+
+</plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.2.5</version>
+</plugin>
       </plugins>
     </pluginManagement>
   </build>
