@@ -1,39 +1,27 @@
-# Use Tomcat as the base image
-FROM tomcat:10.1-jdk21
-
-# Set Maven environment variables
-ENV MAVEN_HOME=/usr/share/maven
-ENV MAVEN_VERSION=3.9.9
-
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar -xz -C /usr/share && \
-    mv /usr/share/apache-maven-${MAVEN_VERSION} /usr/share/maven && \
-    ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+# ==========================================
+# STAGE 1: Build Environment
+# ==========================================
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-# Copy project files
-COPY pom.xml /app/
-COPY src /app/src
-#COPY settingscopy.xml /app/settings.xml
+# Copy dependency files and source code
+COPY pom.xml .
+COPY src ./src
 
-# Build the application
-RUN mvn clean package
+# Compile and package the application into a WAR file
+RUN mvn clean package -DskipTests
 
-# Deploy to Nexus (optional)
-#RUN mvn -U deploy -s /app/settings.xml
 
-# Copy WAR file to Tomcat
-#RUN cp /app/target/taxi-booking.war /usr/local/tomcat/webapps/ROOT.war
-RUN cp /app/target/*.war /usr/local/tomcat/webapps/
+# ==========================================
+# STAGE 2: Runtime Environment
+# ==========================================
+FROM tomcat:10.1-jdk21
 
-# Expose Tomcat port
+# Clean default Tomcat webapps
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# Copy ONLY the compiled WAR file from Stage 1 (builder)
+COPY --from=builder /app/target/taxi-booking.war /usr/local/tomcat/webapps/ROOT.war
+
 EXPOSE 8080
-
-# Start Tomcat
 CMD ["catalina.sh", "run"]
