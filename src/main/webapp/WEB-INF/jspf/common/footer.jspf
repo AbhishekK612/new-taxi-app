@@ -1,0 +1,33 @@
+<footer class="footer py-5 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <h5 class="fw-bold">Taxi Booking</h5>
+                <p class="text-white-50">Your premium ride partner for safe, fast, and affordable travel.</p>
+                <div class="d-flex gap-3">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="${pageContext.request.contextPath}/new/home.jsp">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/new/book-ride.jsp">Book Ride</a></li>
+                    <li><a href="${pageContext.request.contextPath}/new/services.jsp">Services</a></li>
+                    <li><a href="${pageContext.request.contextPath}/faq.jsp">FAQ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/new/contact.jsp">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold">Privacy</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>

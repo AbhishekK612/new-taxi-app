@@ -1,0 +1,22 @@
+﻿version: '3.8'
+services:
+  taxi-booking:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taxi-booking-app
+    restart: unless-stopped
+    environment:
+      DB_HOST: host.docker.internal
+      DB_PORT: "3306"
+      DB_NAME: taxi_booking
+      DB_USER: root
+      DB_PASSWORD: root
+    ports:
+      - "9093:8080"
+    networks:
+      - taxi-network
+
+networks:
+  taxi-network:
+    driver: bridge
