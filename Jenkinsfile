@@ -10,14 +10,14 @@ pipeline {
         stage('Compile') {
             steps {
                 script{
-                echo 'Compile the code in ${params.Env} environment'
+                echo "Compile the code in ${params.Env} environment"
                 }
             }
             }
             stage('CodeReview') {
                 steps {
                     script{
-                    echo 'Reviewing the code'
+                    echo "Reviewing the code"
                 }
                 }
             }
@@ -28,21 +28,21 @@ pipeline {
                      
                     steps {
                         script{
-                        echo 'Test the code'
+                        echo "Test the code"
                     }
                     }
                 }
                     stage('Coverage analysis') {
                         steps {
                             script{
-                            echo 'Static code analysis of ${params.APPVERSION} version'
+                            echo "Static code analysis of ${params.APPVERSION} version"
                         }
                         }
                     }
                         stage('Pacage') {
                             steps {
                                 script{
-                                echo 'Package the code'
+                                echo "Package the code"
                             }
                             }
                         }
