@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'MyMaven'
+    }
+
     parameters {
         string(name: 'Env', defaultValue: 'Test', description: 'Version to deploye')
         booleanParam(name: 'executetest ', defaultValue: true, description: 'decide to run test cases or not')
@@ -11,6 +15,7 @@ pipeline {
             steps {
                 script{
                 echo "Compile the code in ${params.Env} environment"
+                sh 'mvn clean compile'
                 }
             }
             }
@@ -18,6 +23,7 @@ pipeline {
                 steps {
                     script{
                     echo "Reviewing the code"
+                    sh 'mvn pmd:pmd'
                 }
                 }
             }
@@ -29,6 +35,7 @@ pipeline {
                     steps {
                         script{
                         echo "Test the code"
+                        sh 'mvn test'
                     }
                     }
                 }
@@ -36,6 +43,7 @@ pipeline {
                         steps {
                             script{
                             echo "Static code analysis of ${params.APPVERSION} version"
+                            sh 'mvn verify'
                         }
                         }
                     }
@@ -43,6 +51,7 @@ pipeline {
                             steps {
                                 script{
                                 echo "Package the code"
+                                sh 'mvn package'
                             }
                             }
                         }
