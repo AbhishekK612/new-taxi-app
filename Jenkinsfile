@@ -29,6 +29,7 @@ pipeline {
     environment {
         BUILD_SERVER = 'ec2-user@172.31.14.81'
         IMAGE_REPO = 'abhishekk612/taxi-booking'
+        DEPLOY_SERVER = 'ec2-user@172.31.15.57'
     }
 
     stages {
@@ -91,7 +92,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Containerose the code and psuh the image to docker hub') {
             agent any
 
             steps {
@@ -143,6 +144,40 @@ pipeline {
                                 ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} \
                                 "sudo docker push ${IMAGE_REPO}:${params.APPVERSION}"
                             """
+
+                        }
+                    }
+                }
+            }
+        }
+
+          stage('Deploy the dockor image') {
+            agent any
+
+            steps {
+                script {
+
+                    sshagent(['slave2']) {
+                       
+                       echo "Starting Deploying the Docker Image into the Deply-Server"
+                        withCredentials([
+                            usernamePassword(
+                                credentialsId: 'docker-hub',
+                                usernameVariable: 'username',
+                                passwordVariable: 'passwd'
+                            )
+                        ]) {
+                        
+                            echo "INSTALLING DOCKER!.........."
+
+                            sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
+                            sh "ssh ${DEPLOY_SERVER} sudo service docker start"
+                            sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${username} -p ${passwd}"
+                            sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_REPO}"
+
+                            echo "RUNNING THE CONTAINER SUCCESSFLLY!.........."
+
+                            
 
                         }
                     }
