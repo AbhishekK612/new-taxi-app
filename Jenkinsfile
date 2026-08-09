@@ -10,6 +10,10 @@ pipeline {
         booleanParam(name: 'executetest ', defaultValue: true, description: 'decide to run test cases or not')
         choice(name: 'APPVERSION', choices: ['1.1', '1.2', '1.3'], description: 'Select the Appversion to deploy')
     }
+
+    environment {
+        BUILD_SERVER = 'ec2-user@172.31.14.81'
+    }
     stages {
         stage('Compile') {
             agent any
@@ -62,14 +66,17 @@ pipeline {
                         stage('Package') {
                             agent any
                                 steps {
-                                script{
-                                echo "Package the code"
-                                sh 'mvn package'
+                                    script{
+                                        sshagent(['slave2']){
+                                                                                    
+                                         echo "Package the code"
+                                         sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user/"
+                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
+                                    }
+                                    }
+                                }
                             }
-                            }
-                        }
-                    }
-                    }
-
+        }
+}
                 
             
