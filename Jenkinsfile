@@ -59,10 +59,9 @@ pipeline {
                         }
                         }
                     }
-                        stage('Pacage') {
-                            agnent any
-
-                            steps {
+                        stage('Package') {
+                            agent any
+                                steps {
                                 script{
                                 echo "Package the code"
                                 sh 'mvn package'
