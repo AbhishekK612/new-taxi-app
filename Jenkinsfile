@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools {
         maven 'MyMaven'
@@ -12,6 +12,7 @@ pipeline {
     }
     stages {
         stage('Compile') {
+            agent any
             steps {
                 script{
                 echo "Compile the code in ${params.Env} environment"
@@ -20,6 +21,7 @@ pipeline {
             }
             }
             stage('CodeReview') {
+                agent any
                 steps {
                     script{
                     echo "Reviewing the code"
@@ -28,6 +30,7 @@ pipeline {
                 }
             }
                 stage('Unit Testing') {
+                    agent any
                     /*when {
                         expression { return params.executetest == true }
                     }*/
@@ -46,6 +49,9 @@ pipeline {
                     }
                 }
                     stage('Coverage analysis') {
+                      agent{
+                        label 'linux-slave'
+                      }
                         steps {
                             script{
                             echo "Static code analysis of ${params.APPVERSION} version"
@@ -54,6 +60,8 @@ pipeline {
                         }
                     }
                         stage('Pacage') {
+                            agnent any
+
                             steps {
                                 script{
                                 echo "Package the code"
