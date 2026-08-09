@@ -51,7 +51,7 @@ pipeline {
                     }
                 }
                     stage('Coverage analysis') {
-                      
+                      agent any
                         steps {
                             script{
                             echo "Static code analysis of ${params.APPVERSION} version"
