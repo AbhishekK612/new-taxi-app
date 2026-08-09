@@ -21,7 +21,9 @@ pipeline {
             }
             }
             stage('CodeReview') {
-                agent any
+                agent{
+                        label 'linux-slave'
+                      }
                 steps {
                     script{
                     echo "Reviewing the code"
@@ -49,9 +51,7 @@ pipeline {
                     }
                 }
                     stage('Coverage analysis') {
-                      agent{
-                        label 'linux-slave'
-                      }
+                      
                         steps {
                             script{
                             echo "Static code analysis of ${params.APPVERSION} version"
