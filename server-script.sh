@@ -17,4 +17,6 @@ fi
 cd /home/ec2-user/new-taxi-app
 #mvn package
 
-sudo docker build -t taxi-booking "$1" .
+sudo docker build -t "$1" .
+
+echo "Docker image $1 built successfully"
