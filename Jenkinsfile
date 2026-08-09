@@ -13,6 +13,7 @@ pipeline {
 
     environment {
         BUILD_SERVER = 'ec2-user@172.31.14.81'
+        IMAGE_NAME='abhishekk612/taxi-booking:$BUILD_NUMBER'
     }
     stages {
         stage('Compile') {
@@ -70,8 +71,15 @@ pipeline {
                                         sshagent(['slave2']){
                                                                                     
                                          echo "Package the code"
+                                         withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'passwd', usernameVariable: 'username')]) {
                                          sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user/"
-                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
+                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh ${IMAGE_NAME}'"
+                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'sudo docker login -u ${username} -p ${passwd}'"
+                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'sudo docker tag ${IMAGE_NAME}:${params.APPVERSION}'"
+                                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'sudo docker push ${IMAGE_NAME}:${params.APPVERSION}'"
+                                         //sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'docker images'"
+                                         //sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'docker ps -a'"
+                                    }
                                     }
                                     }
                                 }

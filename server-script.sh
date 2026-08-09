@@ -1,8 +1,8 @@
-sudo yum install java -y
+#sudo yum install java -y
 sudo yum install git -y
-sudo yum install maven -y
-#sudo yum install docker -y
-#sudo service docker start
+#sudo yum install maven -y
+sudo yum install docker -y
+sudo service docker start
 
 
 if [ -d "new-taxi-app" ]
@@ -15,6 +15,6 @@ else
 fi
 
 cd /home/ec2-user/new-taxi-app
-mvn package
+#mvn package
 
-#sudo docker build -t $1 .
+sudo docker build -t taxi-booking $1 .
